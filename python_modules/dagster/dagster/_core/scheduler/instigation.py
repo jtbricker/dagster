@@ -1,5 +1,3 @@
-# pyright: strict
-
 from enum import Enum
 from inspect import Parameter
 from typing import Any, Dict, List, Mapping, NamedTuple, Optional, Sequence, Type, Union
@@ -97,7 +95,7 @@ class ScheduleInstigatorData(
     def __new__(
         cls, cron_schedule: Union[str, Sequence[str]], start_timestamp: Optional[float] = None
     ):
-        cron_schedule = check.inst_param(cron_schedule, "cron_schedule", (str, Sequence[str]))
+        cron_schedule = check.inst_param(cron_schedule, "cron_schedule", (str, list))
         if not isinstance(cron_schedule, str):
             cron_schedule = check.sequence_param(cron_schedule, "cron_schedule", of_type=str)
 
@@ -157,7 +155,7 @@ class InstigatorStateSerializer(DefaultNamedTupleSerializer["InstigatorState"]):
                 # For backcompat, we store instigator_data as job_specific_data
                 klass_kwargs["instigator_data"] = unpacked
 
-        return klass(**klass_kwargs)  # type: ignore  # (namedtuple)
+        return klass(**klass_kwargs)
 
     @classmethod
     def value_to_storage_dict(
@@ -309,7 +307,7 @@ class TickSerializer(DefaultNamedTupleSerializer["InstigatorTick"]):
                 # For backcompat, we store tick_data as job_tick_data
                 klass_kwargs["tick_data"] = unpacked
 
-        return klass(**klass_kwargs)  # type: ignore  # (namedtuple)
+        return klass(**klass_kwargs)
 
     @classmethod
     def value_to_storage_dict(
@@ -467,7 +465,7 @@ class TickDataSerializer(DefaultNamedTupleSerializer["TickData"]):
                 # For backcompat, we store instigator_type as job_type
                 klass_kwargs["instigator_type"] = unpacked
 
-        return klass(**klass_kwargs)  # type: ignore  # (namedtuple)
+        return klass(**klass_kwargs)
 
     @classmethod
     def value_to_storage_dict(

@@ -1,5 +1,3 @@
-# pyright: strict
-
 import abc
 import os
 from typing import Any, NamedTuple, Optional, Sequence
