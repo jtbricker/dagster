@@ -11,6 +11,7 @@ class AvailablePythonVersion(str, Enum):
     V3_8 = "3.8"
     V3_9 = "3.9"
     V3_10 = "3.10"
+    V3_11 = "3.11"
 
     @classmethod
     def get_all(cls) -> List["AvailablePythonVersion"]:
@@ -24,7 +25,7 @@ class AvailablePythonVersion(str, Enum):
     def get_pytest_defaults(cls) -> List["AvailablePythonVersion"]:
         branch_name = safe_getenv("BUILDKITE_BRANCH")
         commit_message = safe_getenv("BUILDKITE_MESSAGE")
-        if branch_name == "master" or is_release_branch(branch_name):
+        if branch_name == "master" or is_release_branch(branch_name) or True:
             return cls.get_all()
         else:
             # environment variable-specified defaults

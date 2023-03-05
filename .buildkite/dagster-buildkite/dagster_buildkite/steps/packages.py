@@ -283,13 +283,18 @@ postgres_extra_cmds = [
 EXAMPLE_PACKAGES_WITH_CUSTOM_CONFIG: List[PackageSpec] = [
     PackageSpec(
         "examples/with_airflow",
-        unsupported_python_versions=[AvailablePythonVersion.V3_9, AvailablePythonVersion.V3_10],
+        unsupported_python_versions=[
+            AvailablePythonVersion.V3_9,
+            AvailablePythonVersion.V3_10,
+            AvailablePythonVersion.V3_11,
+        ],
     ),
     PackageSpec(
         "examples/assets_dbt_python",
         unsupported_python_versions=[
             # dependency on dagster-dbt
             AvailablePythonVersion.V3_10,
+            AvailablePythonVersion.V3_11,
         ],
     ),
     PackageSpec(
@@ -297,6 +302,7 @@ EXAMPLE_PACKAGES_WITH_CUSTOM_CONFIG: List[PackageSpec] = [
         unsupported_python_versions=[
             # dependency on dagster-dbt
             AvailablePythonVersion.V3_10,
+            AvailablePythonVersion.V3_11,
         ],
     ),
     PackageSpec(
@@ -316,6 +322,7 @@ EXAMPLE_PACKAGES_WITH_CUSTOM_CONFIG: List[PackageSpec] = [
         unsupported_python_versions=[
             # Issue with pinned of great_expectations
             AvailablePythonVersion.V3_10,
+            AvailablePythonVersion.V3_11,
         ],
     ),
 ]
@@ -370,6 +377,7 @@ LIBRARY_PACKAGES_WITH_CUSTOM_CONFIG: List[PackageSpec] = [
         # dbt-core does not yet support python 3.10
         unsupported_python_versions=[
             AvailablePythonVersion.V3_10,
+            AvailablePythonVersion.V3_11,
         ],
         pytest_tox_factors=[
             "dbt_13X",
@@ -385,6 +393,7 @@ LIBRARY_PACKAGES_WITH_CUSTOM_CONFIG: List[PackageSpec] = [
         # omit python 3.10 until we add support
         unsupported_python_versions=[
             AvailablePythonVersion.V3_10,
+            AvailablePythonVersion.V3_11,
         ],
         env_vars=[
             "AIRFLOW_HOME",

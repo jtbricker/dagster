@@ -240,7 +240,7 @@ class PackageSpec:
         if self._skip_reason:
             return self._skip_reason
 
-        if not is_feature_branch(os.getenv("BUILDKITE_BRANCH", "")):
+        if not is_feature_branch(os.getenv("BUILDKITE_BRANCH", "")) or True:
             logging.info(f"Building {self.name} we're not on a feature branch")
             self._should_skip = False
             return None
