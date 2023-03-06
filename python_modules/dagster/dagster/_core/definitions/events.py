@@ -224,8 +224,6 @@ class Output(Generic[T]):
         value (Any): The value returned by the compute function.
         output_name (Optional[str]): Name of the corresponding out. (default:
             "result")
-        metadata_entries (Optional[MetadataEntry]):
-            (Experimental) A set of metadata entries to attach to events related to this Output.
         metadata (Optional[Dict[str, Union[str, float, int, MetadataValue]]]):
             Arbitrary metadata about the failure.  Keys are displayed string labels, and values are
             one of the following: string, float, int, JSON-serializable dict, JSON-serializable
@@ -238,22 +236,19 @@ class Output(Generic[T]):
         self,
         value: T,
         output_name: Optional[str] = DEFAULT_OUTPUT,
-        metadata_entries: Optional[Sequence[MetadataEntry]] = None,
         metadata: Optional[Mapping[str, RawMetadataValue]] = None,
         data_version: Optional[DataVersion] = None,
     ):
-        metadata = check.opt_mapping_param(metadata, "metadata", key_type=str)
-        metadata_entries = check.opt_sequence_param(
-            metadata_entries,
-            "metadata_entries",
-            of_type=MetadataEntry,
-        )
         self._value = value
         self._output_name = check.str_param(output_name, "output_name")
-        self._metadata_entries = normalize_metadata(metadata, metadata_entries)
         if data_version is not None:
-            experimental_class_param_warning("data_version", "Output")
-        self._data_version = check.opt_inst_param(data_version, "data_version", DataVersion)
+            experimental_class_param_warning("logical_version", "Output")
+        self._data_version = check.opt_inst_param(
+            data_version, "data_version", DataVersion
+        )
+        self._metadata_entries = normalize_metadata(
+            check.opt_mapping_param(metadata, "metadata", key_type=str)
+        )
 
     @property
     def metadata_entries(self) -> Sequence[MetadataEntry]:
@@ -315,17 +310,14 @@ class DynamicOutput(Generic[T]):
         value: T,
         mapping_key: str,
         output_name: Optional[str] = DEFAULT_OUTPUT,
-        metadata_entries: Optional[Sequence[MetadataEntry]] = None,
         metadata: Optional[Mapping[str, RawMetadataValue]] = None,
     ):
-        metadata = check.opt_mapping_param(metadata, "metadata", key_type=str)
-        metadata_entries = check.opt_sequence_param(
-            metadata_entries, "metadata_entries", of_type=MetadataEntry
-        )
         self._mapping_key = check_valid_name(check.str_param(mapping_key, "mapping_key"))
         self._output_name = check.str_param(output_name, "output_name")
-        self._metadata_entries = normalize_metadata(metadata, metadata_entries)
         self._value = value
+        self._metadata_entries = normalize_metadata(
+            check.opt_mapping_param(metadata, "metadata", key_type=str)
+        )
 
     @property
     def metadata_entries(self) -> Sequence[MetadataEntry]:
@@ -388,7 +380,6 @@ class AssetObservation(
         cls,
         asset_key: Union[Sequence[str], AssetKey, str],
         description: Optional[str] = None,
-        metadata_entries: Optional[Sequence[MetadataEntry]] = None,
         partition: Optional[str] = None,
         tags: Optional[Mapping[str, str]] = None,
         metadata: Optional[Mapping[str, RawMetadataValue]] = None,
@@ -408,18 +399,15 @@ class AssetObservation(
                 "The tags argument is reserved for system-populated tags."
             )
 
-        metadata = check.opt_mapping_param(metadata, "metadata", key_type=str)
-        metadata_entries = check.opt_sequence_param(
-            metadata_entries, "metadata_entries", of_type=MetadataEntry
+        metadata_entries = normalize_metadata(
+            check.opt_mapping_param(metadata, "metadata", key_type=str)
         )
 
         return super(AssetObservation, cls).__new__(
             cls,
             asset_key=asset_key,
             description=check.opt_str_param(description, "description"),
-            metadata_entries=cast(
-                List[MetadataEntry], normalize_metadata(metadata, metadata_entries)
-            ),
+            metadata_entries=metadata_entries,
             tags=tags,
             partition=check.opt_str_param(partition, "partition"),
         )
@@ -457,8 +445,6 @@ class AssetMaterialization(
         asset_key (Union[str, List[str], AssetKey]): A key to identify the materialized asset across
             job runs
         description (Optional[str]): A longer human-readable description of the materialized value.
-        metadata_entries (Optional[List[MetadataEntry]]): Arbitrary
-            metadata about the materialized value.
         partition (Optional[str]): The name of the partition
             that was materialized.
         tags (Optional[Mapping[str, str]]): A mapping containing system-populated tags for the
@@ -473,7 +459,6 @@ class AssetMaterialization(
         cls,
         asset_key: CoercibleToAssetKey,
         description: Optional[str] = None,
-        metadata_entries: Optional[Sequence[MetadataEntry]] = None,
         partition: Optional[str] = None,
         tags: Optional[Mapping[str, str]] = None,
         metadata: Optional[Mapping[str, RawMetadataValue]] = None,
@@ -496,10 +481,10 @@ class AssetMaterialization(
                 " AssetMaterializations. The tags argument is reserved for system-populated tags."
             )
 
-        metadata = check.opt_mapping_param(metadata, "metadata", key_type=str)
-        metadata_entries = check.opt_sequence_param(
-            metadata_entries, "metadata_entries", of_type=MetadataEntry
+        metadata_entries = normalize_metadata(
+            check.opt_mapping_param(metadata, "metadata", key_type=str)
         )
+
 
         partition = check.opt_str_param(partition, "partition")
 
@@ -518,7 +503,7 @@ class AssetMaterialization(
             cls,
             asset_key=asset_key,
             description=check.opt_str_param(description, "description"),
-            metadata_entries=normalize_metadata(metadata, metadata_entries),
+            metadata_entries=metadata_entries,
             tags=tags,
             partition=partition,
         )

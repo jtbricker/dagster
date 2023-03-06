@@ -106,7 +106,6 @@ class DagsterType(RequiresResources):
         required_resource_keys: t.Optional[t.Set[str]] = None,
         kind: DagsterTypeKind = DagsterTypeKind.REGULAR,
         typing_type: t.Any = t.Any,
-        metadata_entries: t.Optional[t.Sequence[MetadataEntry]] = None,
         metadata: t.Optional[t.Mapping[str, RawMetadataValue]] = None,
     ):
         check.opt_str_param(key, "key")
@@ -150,9 +149,6 @@ class DagsterType(RequiresResources):
 
         self._typing_type = typing_type
 
-        metadata_entries = check.opt_list_param(
-            metadata_entries, "metadata_entries", of_type=MetadataEntry
-        )
         self._metadata_entries = normalize_metadata(
             check.opt_mapping_param(metadata, "metadata", key_type=str), metadata_entries
         )

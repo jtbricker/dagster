@@ -66,7 +66,6 @@ T_Packable = TypeVar("T_Packable", bound=PackableValue)
 @overload
 def normalize_metadata(
     metadata: Mapping[str, RawMetadataValue],
-    metadata_entries: Sequence["MetadataEntry"],
     allow_invalid: bool = False,
 ) -> Sequence["MetadataEntry"]:
     ...
@@ -75,7 +74,6 @@ def normalize_metadata(
 @overload
 def normalize_metadata(
     metadata: Mapping[str, RawMetadataValue],
-    metadata_entries: Sequence["MetadataEntry"],
     allow_invalid: bool = False,
 ) -> Sequence["MetadataEntry"]:
     ...
@@ -83,33 +81,15 @@ def normalize_metadata(
 
 def normalize_metadata(
     metadata: Mapping[str, RawMetadataValue],
-    metadata_entries: Sequence["MetadataEntry"],
     allow_invalid: bool = False,
-) -> Sequence["MetadataEntry"]:
-    if metadata and metadata_entries:
-        raise DagsterInvalidMetadata(
-            "Attempted to provide both `metadata` and `metadata_entries` arguments to an event. "
-            "Must provide only one of the two."
-        )
-
-    if metadata_entries:
-        deprecation_warning(
-            'Argument "metadata_entries"',
-            "1.0.0",
-            additional_warn_txt=(
-                "Use argument `metadata` instead. The `MetadataEntry` `description` attribute is"
-                " also deprecated-- argument `metadata` takes a label: value dictionary."
-            ),
-            stacklevel=4,  # to get the caller of `normalize_metadata`
-        )
-        return check.sequence_param(metadata_entries, "metadata_entries", MetadataEntry)
+) -> Sequence[Union["MetadataEntry", "PartitionMetadataEntry"]]:
 
     # This is a stopgap measure to deal with unsupported metadata values, which occur when we try
     # to convert arbitrary metadata (on e.g. OutputDefinition) to a MetadataValue, which is required
     # for serialization. This will cause unsupported values to be silently replaced with a
     # string placeholder.
-    elif allow_invalid:
-        metadata_entries = []
+    if allow_invalid:
+        metadata_entries: List[MetadataEntry] = []
         for k, v in metadata.items():
             try:
                 metadata_entries.append(package_metadata_value(k, v))
