@@ -8,7 +8,7 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots['test_fetch_top_level_resource 1'] = {
-    'topLevelResourceDetailsOrError': {
+    'resourceDetailsOrError': {
         '__typename': 'ResourceDetails',
         'configFields': [
             {
@@ -90,6 +90,14 @@ snapshots['test_fetch_top_level_resources 1'] = {
                 ],
                 'description': None,
                 'name': 'foo'
+            },
+            {
+                'configFields': [
+                ],
+                'configuredValues': [
+                ],
+                'description': None,
+                'name': 'my_outer_resource'
             },
             {
                 'configFields': [

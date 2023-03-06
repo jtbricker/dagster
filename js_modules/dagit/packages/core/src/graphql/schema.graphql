@@ -1908,6 +1908,7 @@ type ResourceDetails {
   description: String
   configFields: [ConfigTypeField!]!
   configuredValues: [ConfiguredValue!]!
+  isTopLevel: Boolean!
 }
 
 type ConfiguredValue {
@@ -2736,7 +2737,7 @@ type DagitQuery {
   scheduler: SchedulerOrError!
   scheduleOrError(scheduleSelector: ScheduleSelector!): ScheduleOrError!
   schedulesOrError(repositorySelector: RepositorySelector!): SchedulesOrError!
-  topLevelResourceDetailsOrError(resourceSelector: ResourceSelector!): ResourceDetailsOrError!
+  resourceDetailsOrError(resourceSelector: ResourceSelector!): ResourceDetailsOrError!
   allTopLevelResourceDetailsOrError(repositorySelector: RepositorySelector!): ResourcesOrError!
   sensorOrError(sensorSelector: SensorSelector!): SensorOrError!
   sensorsOrError(repositorySelector: RepositorySelector!): SensorsOrError!

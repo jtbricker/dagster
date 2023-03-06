@@ -346,6 +346,10 @@ class ResourceWithKeyMapping(ResourceDefinition):
         return _resolve_required_resource_keys_for_resource(
             self._resource, self._resource_id_to_key_mapping
         )
+    
+    @property
+    def wrapped_resource(self) -> ResourceDefinition:
+        return self._resource
 
     @property
     def inner_resource(self):
@@ -407,6 +411,7 @@ class ConfigurableResource(
     def __init__(self, **data: Any):
         resource_pointers, data_without_resources = separate_resource_params(data)
 
+
         schema = infer_schema_from_config_class(
             self.__class__, fields_to_omit=set(resource_pointers.keys())
         )
@@ -431,6 +436,13 @@ class ConfigurableResource(
         )
         self._resolved_config_dict = resolved_config_dict
         self._schema = schema
+
+        self._nested_resources = {k: v for k, v in resource_pointers.items()}
+
+
+    @property
+    def nested_resources(self) -> Mapping[str, ResourceDefinition]:
+        return self._nested_resources
 
     @classmethod
     def configure_at_launch(cls: "Type[Self]", **kwargs) -> "PartialResource[Self]":
