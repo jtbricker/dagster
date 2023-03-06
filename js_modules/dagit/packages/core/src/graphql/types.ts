@@ -2041,6 +2041,12 @@ export type MultiPartitions = {
   ranges: Array<MaterializedPartitionRange2D>;
 };
 
+export type NestedResourceEntry = {
+  __typename: 'NestedResourceEntry';
+  name: Scalars['String'];
+  resourceKey: Scalars['String'];
+};
+
 export type NoModeProvidedError = Error & {
   __typename: 'NoModeProvidedError';
   message: Scalars['String'];
@@ -2813,6 +2819,7 @@ export type ResourceDetails = {
   description: Maybe<Scalars['String']>;
   isTopLevel: Scalars['Boolean'];
   name: Scalars['String'];
+  nestedResources: Array<NestedResourceEntry>;
 };
 
 export type ResourceDetailsList = {
