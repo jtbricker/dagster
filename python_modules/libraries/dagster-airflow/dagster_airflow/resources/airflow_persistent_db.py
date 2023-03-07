@@ -9,7 +9,6 @@ from dagster import (
     DagsterRun,
     Field,
     InitResourceContext,
-    Noneable,
     ResourceDefinition,
     _check as check,
 )
@@ -51,14 +50,16 @@ class AirflowPersistentDatabase(AirflowDatabase):
             uri=uri, connections=[Connection(**c) for c in context.resource_config["connections"]]
         )
         return AirflowPersistentDatabase(
-            dagster_run=check.not_none(context.dagster_run, "Context must have run"), uri=uri
+            dagster_run=check.not_none(context.dagster_run, "Context must have run"),
+            uri=uri,
+            dag_run_config=context.resource_config.get("dag_run_config"),
         )
 
 
 def make_persistent_airflow_db_resource(
     uri: Optional[str] = "",
     connections: List[Connection] = [],
-    dag_run_config: Optional[dict] = None,
+    dag_run_config: Optional[dict] = {},
 ) -> ResourceDefinition:
     """
     Creates a Dagster resource that provides an persistent Airflow database.
@@ -87,7 +88,7 @@ def make_persistent_airflow_db_resource(
                 is_required=False,
             ),
             "dag_run_config": Field(
-                Noneable(dict),
+                dict,
                 default_value=dag_run_config,
                 is_required=False,
             ),

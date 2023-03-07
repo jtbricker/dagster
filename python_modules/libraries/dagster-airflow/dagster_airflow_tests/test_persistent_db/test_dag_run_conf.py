@@ -30,7 +30,7 @@ with models.DAG(
         task_id="previous_macro_test",
         python_callable=test_function,
         provide_context=True,
-        op_kwargs={'config_value': "{{dag_run.conf["configuration_key"]}}"}
+        op_kwargs={'config_value': '{{dag_run.conf.get("configuration_key")}}'}
     )
 """
 
