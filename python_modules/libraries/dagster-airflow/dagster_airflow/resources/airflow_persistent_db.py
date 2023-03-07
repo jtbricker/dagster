@@ -5,11 +5,11 @@ from typing import List, Optional
 import airflow
 from airflow.models.connection import Connection
 from dagster import (
-    Noneable,
     Array,
     DagsterRun,
     Field,
     InitResourceContext,
+    Noneable,
     ResourceDefinition,
     _check as check,
 )

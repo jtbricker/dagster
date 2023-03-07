@@ -7,11 +7,11 @@ import airflow
 from airflow.models.connection import Connection
 from airflow.utils import db
 from dagster import (
-    Noneable,
     Array,
     DagsterRun,
     Field,
     InitResourceContext,
+    Noneable,
     ResourceDefinition,
     _check as check,
 )
