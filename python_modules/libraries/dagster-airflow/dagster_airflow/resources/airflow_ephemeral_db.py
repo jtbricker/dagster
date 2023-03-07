@@ -7,6 +7,7 @@ import airflow
 from airflow.models.connection import Connection
 from airflow.utils import db
 from dagster import (
+    Noneable,
     Array,
     DagsterRun,
     Field,
@@ -95,7 +96,7 @@ def make_ephemeral_airflow_db_resource(
                 is_required=False,
             ),
             "dag_run_config": Field(
-                dict,
+                Noneable(dict),
                 default_value=dag_run_config,
                 is_required=False,
             ),

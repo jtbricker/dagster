@@ -5,6 +5,7 @@ from typing import List, Optional
 import airflow
 from airflow.models.connection import Connection
 from dagster import (
+    Noneable,
     Array,
     DagsterRun,
     Field,
@@ -86,7 +87,7 @@ def make_persistent_airflow_db_resource(
                 is_required=False,
             ),
             "dag_run_config": Field(
-                dict,
+                Noneable(dict),
                 default_value=dag_run_config,
                 is_required=False,
             ),
