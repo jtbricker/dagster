@@ -22,13 +22,13 @@ with models.DAG(
     dag_id="dag_run_conf_dag", default_args=default_args, schedule_interval='0 0 * * *',
 ) as dag_run_conf_dag:
     def test_function(**kwargs):
-        Variable.set("CONFIGURATION_VALUE",'{{dag_run.conf["configuration_key"]}}')
+        Variable.set("CONFIGURATION_VALUE", kwargs['config_value'])
 
     PythonOperator(
         task_id="previous_macro_test",
         python_callable=test_function,
         provide_context=True,
-        op_kwargs={'prev_execution': "{{ prev_execution_date }}"}
+        op_kwargs={'config_value': "{{dag_run.conf["configuration_key"]}}"}
     )
 """
 
