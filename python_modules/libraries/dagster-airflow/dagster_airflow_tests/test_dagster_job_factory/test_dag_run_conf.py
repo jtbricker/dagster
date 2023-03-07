@@ -50,7 +50,7 @@ def test_dag_run_conf_persistent(postgres_airflow_db: str) -> None:
         definitions = make_dagster_definitions_from_airflow_dags_path(
             dags_path, resource_defs={"airflow_db": airflow_db}
         )
-        job = definitions.get_job_def("previous_macro_dag")
+        job = definitions.get_job_def("dag_run_conf_dag")
 
         result = job.execute_in_process(
             tags={AIRFLOW_EXECUTION_DATE_STR: datetime.datetime(2023, 2, 2).isoformat()}
