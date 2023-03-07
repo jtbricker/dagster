@@ -3,11 +3,12 @@ import tempfile
 
 import pytest
 from airflow import __version__ as airflow_version
-from airflow.models import DagBag
+from airflow.models import DagBag, Variable
 from dagster_airflow import (
     make_dagster_definitions_from_airflow_dags_path,
     make_dagster_definitions_from_airflow_example_dags,
     make_dagster_job_from_airflow_dag,
+    make_ephemeral_airflow_db_resource,
 )
 
 from dagster_airflow_tests.marks import requires_local_db
@@ -148,3 +149,48 @@ def test_retry_conversion():
         assert result.success
         for event in result.all_events:
             assert event.event_type_value != "STEP_FAILURE"
+
+
+DAG_RUN_CONF_DAG = """
+from airflow import models
+
+from airflow.operators.python_operator import PythonOperator
+from airflow.models import Variable
+import datetime
+
+default_args = {"start_date": datetime.datetime(2023, 2, 1)}
+
+with models.DAG(
+    dag_id="dag_run_conf_dag", default_args=default_args, schedule_interval='0 0 * * *',
+) as dag_run_conf_dag:
+    def test_function(**kwargs):
+        Variable.set("CONFIGURATION_VALUE",'{{dag_run.conf["configuration_key"]}}')
+
+    PythonOperator(
+        task_id="previous_macro_test",
+        python_callable=test_function,
+        provide_context=True,
+        op_kwargs={'prev_execution': "{{ prev_execution_date }}"}
+    )
+"""
+
+
+@pytest.mark.skipif(airflow_version >= "2.0.0", reason="requires airflow 1")
+@requires_local_db
+def test_dag_run_conf() -> None:
+    with tempfile.TemporaryDirectory() as dags_path:
+        with open(os.path.join(dags_path, "dag.py"), "wb") as f:
+            f.write(bytes(DAG_RUN_CONF_DAG.encode("utf-8")))
+
+        airflow_db = make_ephemeral_airflow_db_resource(dag_run_config={"configuration_key": "foo"})
+
+        dag_bag = DagBag(dag_folder=dags_path)
+        retry_dag = dag_bag.get_dag(dag_id="dag_run_conf_dag")
+
+        job = make_dagster_job_from_airflow_dag(
+            dag=retry_dag, resource_defs={"airflow_db": airflow_db}
+        )
+
+        result = job.execute_in_process()
+        assert result.success
+        assert Variable.get("CONFIGURATION_VALUE") == "foo"
