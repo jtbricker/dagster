@@ -2044,7 +2044,7 @@ export type MultiPartitions = {
 export type NestedResourceEntry = {
   __typename: 'NestedResourceEntry';
   name: Scalars['String'];
-  resourceKey: Scalars['String'];
+  resource: ResourceDetails;
 };
 
 export type NoModeProvidedError = Error & {
@@ -2820,6 +2820,7 @@ export type ResourceDetails = {
   isTopLevel: Scalars['Boolean'];
   name: Scalars['String'];
   nestedResources: Array<NestedResourceEntry>;
+  resourceType: Scalars['String'];
 };
 
 export type ResourceDetailsList = {
