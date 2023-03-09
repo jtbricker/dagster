@@ -15,7 +15,12 @@ export type ResourceDetailsFragment = {
     isRequired: boolean;
     defaultValueAsJson: string | null;
   }>;
-  configuredValues: Array<{__typename: 'ConfiguredValue'; key: string; value: string}>;
+  configuredValues: Array<{
+    __typename: 'ConfiguredValue';
+    key: string;
+    value: string;
+    type: Types.ConfiguredValueType;
+  }>;
   nestedResources: Array<{
     __typename: 'NestedResourceEntry';
     name: string;
@@ -24,25 +29,6 @@ export type ResourceDetailsFragment = {
       name: string;
       resourceType: string;
       description: string | null;
-      configFields: Array<{
-        __typename: 'ConfigTypeField';
-        name: string;
-        description: string | null;
-        configTypeKey: string;
-        isRequired: boolean;
-        defaultValueAsJson: string | null;
-      }>;
-      configuredValues: Array<{
-        __typename: 'ConfiguredValue';
-        key: string;
-        value: string;
-        type: Types.ConfiguredValueType;
-      }>;
-      nestedResources: Array<{
-        __typename: 'NestedResourceEntry';
-        name: string;
-        resource: {__typename: 'ResourceDetails'; name: string; resourceType: string};
-      }>;
     };
   }>;
   parentResources: Array<{
@@ -87,7 +73,12 @@ export type ResourceRootQuery = {
           isRequired: boolean;
           defaultValueAsJson: string | null;
         }>;
-        configuredValues: Array<{__typename: 'ConfiguredValue'; key: string; value: string}>;
+        configuredValues: Array<{
+          __typename: 'ConfiguredValue';
+          key: string;
+          value: string;
+          type: Types.ConfiguredValueType;
+        }>;
         nestedResources: Array<{
           __typename: 'NestedResourceEntry';
           name: string;
@@ -96,25 +87,6 @@ export type ResourceRootQuery = {
             name: string;
             resourceType: string;
             description: string | null;
-            configFields: Array<{
-              __typename: 'ConfigTypeField';
-              name: string;
-              description: string | null;
-              configTypeKey: string;
-              isRequired: boolean;
-              defaultValueAsJson: string | null;
-            }>;
-            configuredValues: Array<{
-              __typename: 'ConfiguredValue';
-              key: string;
-              value: string;
-              type: Types.ConfiguredValueType;
-            }>;
-            nestedResources: Array<{
-              __typename: 'NestedResourceEntry';
-              name: string;
-              resource: {__typename: 'ResourceDetails'; name: string; resourceType: string};
-            }>;
           };
         }>;
         parentResources: Array<{

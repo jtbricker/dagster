@@ -425,6 +425,7 @@ export const RESOURCE_DETAILS_FRAGMENT = gql`
     configuredValues {
       key
       value
+      type
     }
     nestedResources {
       name
@@ -432,25 +433,6 @@ export const RESOURCE_DETAILS_FRAGMENT = gql`
         name
         resourceType
         description
-        configFields {
-          name
-          description
-          configTypeKey
-          isRequired
-          defaultValueAsJson
-        }
-        configuredValues {
-          key
-          value
-          type
-        }
-        nestedResources {
-          name
-          resource {
-            name
-            resourceType
-          }
-        }
       }
     }
     parentResources {
