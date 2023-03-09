@@ -41,9 +41,6 @@ with environ({"MY_STRING": "bar", "MY_BOOL": "false"}):
                 a_string="foo",
             ),
             "my_resource_env_vars": MyResource(a_string=EnvVar("MY_STRING")),
-            "my_resource": MyResource(
-                a_string="foo",
-            ),
             "my_outer_resource": MyOuterResource(
                 inner=MyInnerResource(a_str="wrapped"),
             ),
