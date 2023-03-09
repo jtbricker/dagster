@@ -3,9 +3,12 @@ import {
   Alert,
   Box,
   ButtonLink,
+  CaptionMono,
   Colors,
   Group,
   Heading,
+  Icon,
+  MiddleTruncate,
   Mono,
   Page,
   PageHeader,
@@ -16,7 +19,7 @@ import {
   Tooltip,
 } from '@dagster-io/ui';
 import * as React from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useParams, useRouteMatch} from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 import {showCustomAlert} from '../app/CustomAlertProvider';
@@ -30,7 +33,12 @@ import {repoAddressToSelector} from '../workspace/repoAddressToSelector';
 import {RepoAddress} from '../workspace/types';
 import {workspacePathFromAddress} from '../workspace/workspacePath';
 
-import {ResourceRootQuery, ResourceRootQueryVariables} from './types/ResourceRoot.types';
+import {ResourceTabs} from './ResourceTabs';
+import {
+  ResourceRootQuery,
+  ResourceRootQueryVariables,
+  ResourceDetailsFragment,
+} from './types/ResourceRoot.types';
 
 interface Props {
   repoAddress: RepoAddress;
@@ -66,7 +74,6 @@ export const ResourceRoot: React.FC<Props> = (props) => {
   useTrackPageView();
 
   const {repoAddress} = props;
-
   const {resourceName} = useParams<{resourceName: string}>();
 
   useDocumentTitle(`Resource: ${resourceName}`);
@@ -85,9 +92,28 @@ export const ResourceRoot: React.FC<Props> = (props) => {
     (queryResult.data?.resourceDetailsOrError.__typename === 'ResourceDetails' &&
       resourceDisplayName(queryResult.data?.resourceDetailsOrError)) ||
     resourceName;
+
+  const numParentResources =
+    queryResult.data?.resourceDetailsOrError.__typename === 'ResourceDetails'
+      ? queryResult.data?.resourceDetailsOrError.parentResources.length
+      : 0;
+
+  const tab = useRouteMatch<{tab?: string; selector: string}>([
+    '/locations/:repoPath/resources/:name/:tab?',
+  ])?.params.tab;
+
   return (
     <Page style={{height: '100%', overflow: 'hidden'}}>
-      <PageHeader title={<Heading>{displayName}</Heading>} />
+      <PageHeader
+        title={<Heading>{displayName}</Heading>}
+        tabs={
+          <ResourceTabs
+            repoAddress={repoAddress}
+            resourceName={resourceName}
+            numParentResources={numParentResources}
+          />
+        }
+      />
       <Loading queryResult={queryResult} allowStaleData={true}>
         {({resourceDetailsOrError}) => {
           if (resourceDetailsOrError.__typename !== 'ResourceDetails') {
@@ -122,16 +148,8 @@ export const ResourceRoot: React.FC<Props> = (props) => {
             );
           }
 
-          const configuredValues = Object.fromEntries(
-            resourceDetailsOrError.configuredValues.map((cv) => [
-              cv.key,
-              {value: cv.value, type: cv.type},
-            ]),
-          );
-          const nestedResources = Object.fromEntries(
-            resourceDetailsOrError.nestedResources.map((nr) => [nr.name, nr.resource]),
-          );
           const resourceTypeSuccinct = succinctType(resourceDetailsOrError.resourceType);
+
           return (
             <div style={{height: '100%', display: 'flex'}}>
               <SplitPanelContainer
@@ -140,105 +158,17 @@ export const ResourceRoot: React.FC<Props> = (props) => {
                 firstMinSize={400}
                 first={
                   <div style={{overflowY: 'scroll'}}>
-                    {Object.keys(nestedResources).length > 0 && (
-                      <Box>
-                        <SectionHeader>
-                          <Subheading>Resource dependencies</Subheading>
-                        </SectionHeader>
-                        <Table>
-                          <thead>
-                            <tr>
-                              <th style={{width: 120}}>Key</th>
-                              <th style={{width: 180}}>Resource</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Object.keys(nestedResources).map((key) => {
-                              return (
-                                <tr key={key}>
-                                  <td>
-                                    <Box
-                                      flex={{direction: 'column', gap: 4, alignItems: 'flex-start'}}
-                                    >
-                                      <strong>{key}</strong>
-                                    </Box>
-                                  </td>
-                                  <td colSpan={2}>
-                                    <Tag icon="resource">
-                                      {' '}
-                                      <Link
-                                        to={workspacePathFromAddress(
-                                          repoAddress,
-                                          `/resources/${nestedResources[key].name}`,
-                                        )}
-                                      >
-                                        {resourceDisplayName(nestedResources[key])}
-                                      </Link>
-                                    </Tag>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </Table>
-                      </Box>
+                    {tab === 'uses' ? (
+                      <ResourceUses
+                        resourceDetails={resourceDetailsOrError}
+                        repoAddress={repoAddress}
+                      />
+                    ) : (
+                      <ResourceConfig
+                        resourceDetails={resourceDetailsOrError}
+                        repoAddress={repoAddress}
+                      />
                     )}
-                    <Box>
-                      <SectionHeader>
-                        <Subheading>Configuration</Subheading>
-                      </SectionHeader>
-                      <Table>
-                        <thead>
-                          <tr>
-                            <th style={{width: 120}}>Key</th>
-                            <th style={{width: 90}}>Type</th>
-                            <th style={{width: 90}}>Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {resourceDetailsOrError.configFields.map((field) => {
-                            const defaultValue = field.defaultValueAsJson;
-                            const type =
-                              field.name in configuredValues
-                                ? configuredValues[field.name].type
-                                : null;
-                            const actualValue =
-                              field.name in configuredValues
-                                ? configuredValues[field.name].value
-                                : defaultValue;
-
-                            const isDefault = type === 'VALUE' && defaultValue === actualValue;
-                            return (
-                              <tr key={field.name}>
-                                <td>
-                                  <Box
-                                    flex={{direction: 'column', gap: 4, alignItems: 'flex-start'}}
-                                  >
-                                    <strong>{field.name}</strong>
-                                    <div style={{fontSize: 12, color: Colors.Gray700}}>
-                                      {field.description}
-                                    </div>
-                                  </Box>
-                                </td>
-                                <td>{remapName(field.configTypeKey)}</td>
-                                <td>
-                                  <Box flex={{direction: 'row', justifyContent: 'space-between'}}>
-                                    <Tooltip
-                                      content={<>Default: {defaultValue}</>}
-                                      canShow={!isDefault}
-                                    >
-                                      {type === 'ENV_VAR' ? <Tag>{actualValue}</Tag> : actualValue}
-                                    </Tooltip>
-                                    {isDefault && <Tag>Default</Tag>}
-                                    {type === 'ENV_VAR' && <Tag intent="success">Env var</Tag>}
-                                  </Box>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </Table>
-                    </Box>
                   </div>
                 }
                 second={
@@ -282,6 +212,173 @@ export const ResourceRoot: React.FC<Props> = (props) => {
   );
 };
 
+const ResourceConfig: React.FC<{
+  resourceDetails: ResourceDetailsFragment;
+  repoAddress: RepoAddress;
+}> = (props) => {
+  const {resourceDetails, repoAddress} = props;
+
+  const configuredValues = Object.fromEntries(
+    resourceDetails.configuredValues.map((cv) => [cv.key, {value: cv.value, type: cv.type}]),
+  );
+  const nestedResources = Object.fromEntries(
+    resourceDetails.nestedResources.map((nr) => [nr.name, nr.resource]),
+  );
+
+  return (
+    <>
+      {Object.keys(nestedResources).length > 0 && (
+        <Box>
+          <SectionHeader>
+            <Subheading>Resource dependencies</Subheading>
+          </SectionHeader>
+          <Table>
+            <thead>
+              <tr>
+                <th style={{width: 120}}>Key</th>
+                <th style={{width: 180}}>Resource</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(nestedResources).map((key) => {
+                return (
+                  <tr key={key}>
+                    <td>
+                      <Box flex={{direction: 'column', gap: 4, alignItems: 'flex-start'}}>
+                        <strong>{key}</strong>
+                      </Box>
+                    </td>
+                    <td colSpan={2}>
+                      <ResourceEntry
+                        url={workspacePathFromAddress(
+                          repoAddress,
+                          `/resources/${nestedResources[key].name}`,
+                        )}
+                        name={resourceDisplayName(nestedResources[key]) || ''}
+                        description={nestedResources[key].description || undefined}
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Box>
+      )}
+      <Box>
+        <SectionHeader>
+          <Subheading>Configuration</Subheading>
+        </SectionHeader>
+        <Table>
+          <thead>
+            <tr>
+              <th style={{width: 120}}>Key</th>
+              <th style={{width: 90}}>Type</th>
+              <th style={{width: 90}}>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {resourceDetails.configFields.map((field) => {
+              const defaultValue = field.defaultValueAsJson;
+              const type =
+                field.name in configuredValues ? configuredValues[field.name].type : null;
+              const actualValue =
+                field.name in configuredValues ? configuredValues[field.name].value : defaultValue;
+
+              const isDefault = type === 'VALUE' && defaultValue === actualValue;
+              return (
+                <tr key={field.name}>
+                  <td>
+                    <Box flex={{direction: 'column', gap: 4, alignItems: 'flex-start'}}>
+                      <strong>{field.name}</strong>
+                      <div style={{fontSize: 12, color: Colors.Gray700}}>{field.description}</div>
+                    </Box>
+                  </td>
+                  <td>{remapName(field.configTypeKey)}</td>
+                  <td>
+                    <Box flex={{direction: 'row', justifyContent: 'space-between'}}>
+                      <Tooltip content={<>Default: {defaultValue}</>} canShow={!isDefault}>
+                        {type === 'ENV_VAR' ? <Tag>{actualValue}</Tag> : actualValue}
+                      </Tooltip>
+                      {isDefault && <Tag>Default</Tag>}
+                      {type === 'ENV_VAR' && <Tag intent="success">Env var</Tag>}
+                    </Box>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Box>
+    </>
+  );
+};
+
+const ResourceUses: React.FC<{
+  resourceDetails: ResourceDetailsFragment;
+  repoAddress: RepoAddress;
+}> = (props) => {
+  const {resourceDetails, repoAddress} = props;
+
+  const parentResources = resourceDetails.parentResources.map((nr) => nr.resource);
+  return (
+    <>
+      <Box>
+        <SectionHeader>
+          <Subheading>Parent resources</Subheading>
+        </SectionHeader>
+        <Table>
+          <thead>
+            <tr>
+              <th>Resource</th>
+            </tr>
+          </thead>
+          <tbody>
+            {parentResources.map((resource) => {
+              return (
+                <tr key={resource.name}>
+                  <td colSpan={2}>
+                    <ResourceEntry
+                      url={workspacePathFromAddress(repoAddress, `/resources/${resource.name}`)}
+                      name={resourceDisplayName(resource) || ''}
+                      description={resource.description || undefined}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Box>
+    </>
+  );
+};
+
+export const ResourceEntry: React.FC<{
+  name: string;
+  url: string;
+  description?: string;
+}> = (props) => {
+  const {url, name, description} = props;
+
+  return (
+    <Box flex={{direction: 'column'}}>
+      <Box
+        flex={{direction: 'row', alignItems: 'center', display: 'inline-flex', gap: 4}}
+        style={{maxWidth: '100%'}}
+      >
+        <Icon name="resource" color={Colors.Blue700} />
+        <div style={{maxWidth: '100%', whiteSpace: 'nowrap', fontWeight: 500}}>
+          <Link to={url} style={{overflow: 'hidden'}}>
+            <MiddleTruncate text={name} />
+          </Link>
+        </div>
+      </Box>
+      <CaptionMono>{description}</CaptionMono>
+    </Box>
+  );
+};
+
 export const RightInfoPanel = styled.div`
   position: relative;
 
@@ -297,12 +394,26 @@ export const RightInfoPanelContent = styled.div`
   flex: 1;
   overflow-y: auto;
 `;
-
-const RESOURCE_ROOT_QUERY = gql`
-  query ResourceRootQuery($resourceSelector: ResourceSelector!) {
-    resourceDetailsOrError(resourceSelector: $resourceSelector) {
-      ... on ResourceDetails {
+export const RESOURCE_DETAILS_FRAGMENT = gql`
+  fragment ResourceDetailsFragment on ResourceDetails {
+    name
+    description
+    configFields {
+      name
+      description
+      configTypeKey
+      isRequired
+      defaultValueAsJson
+    }
+    configuredValues {
+      key
+      value
+    }
+    nestedResources {
+      name
+      resource {
         name
+        resourceType
         description
         configFields {
           name
@@ -323,11 +434,27 @@ const RESOURCE_ROOT_QUERY = gql`
             resourceType
           }
         }
-        resourceType
       }
+    }
+    parentResources {
+      name
+      resource {
+        name
+        resourceType
+        description
+      }
+    }
+    resourceType
+  }
+`;
+const RESOURCE_ROOT_QUERY = gql`
+  query ResourceRootQuery($resourceSelector: ResourceSelector!) {
+    resourceDetailsOrError(resourceSelector: $resourceSelector) {
+      ...ResourceDetailsFragment
       ...PythonErrorFragment
     }
   }
+  ${RESOURCE_DETAILS_FRAGMENT}
   ${PYTHON_ERROR_FRAGMENT}
 `;
 

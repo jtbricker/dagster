@@ -2,6 +2,61 @@
 
 import * as Types from '../../graphql/types';
 
+export type ResourceDetailsFragment = {
+  __typename: 'ResourceDetails';
+  name: string;
+  description: string | null;
+  resourceType: string;
+  configFields: Array<{
+    __typename: 'ConfigTypeField';
+    name: string;
+    description: string | null;
+    configTypeKey: string;
+    isRequired: boolean;
+    defaultValueAsJson: string | null;
+  }>;
+  configuredValues: Array<{__typename: 'ConfiguredValue'; key: string; value: string}>;
+  nestedResources: Array<{
+    __typename: 'NestedResourceEntry';
+    name: string;
+    resource: {
+      __typename: 'ResourceDetails';
+      name: string;
+      resourceType: string;
+      description: string | null;
+      configFields: Array<{
+        __typename: 'ConfigTypeField';
+        name: string;
+        description: string | null;
+        configTypeKey: string;
+        isRequired: boolean;
+        defaultValueAsJson: string | null;
+      }>;
+      configuredValues: Array<{
+        __typename: 'ConfiguredValue';
+        key: string;
+        value: string;
+        type: Types.ConfiguredValueType;
+      }>;
+      nestedResources: Array<{
+        __typename: 'NestedResourceEntry';
+        name: string;
+        resource: {__typename: 'ResourceDetails'; name: string; resourceType: string};
+      }>;
+    };
+  }>;
+  parentResources: Array<{
+    __typename: 'NestedResourceEntry';
+    name: string;
+    resource: {
+      __typename: 'ResourceDetails';
+      name: string;
+      resourceType: string;
+      description: string | null;
+    };
+  }>;
+};
+
 export type ResourceRootQueryVariables = Types.Exact<{
   resourceSelector: Types.ResourceSelector;
 }>;
@@ -32,16 +87,45 @@ export type ResourceRootQuery = {
           isRequired: boolean;
           defaultValueAsJson: string | null;
         }>;
-        configuredValues: Array<{
-          __typename: 'ConfiguredValue';
-          key: string;
-          value: string;
-          type: Types.ConfiguredValueType;
-        }>;
+        configuredValues: Array<{__typename: 'ConfiguredValue'; key: string; value: string}>;
         nestedResources: Array<{
           __typename: 'NestedResourceEntry';
           name: string;
-          resource: {__typename: 'ResourceDetails'; name: string; resourceType: string};
+          resource: {
+            __typename: 'ResourceDetails';
+            name: string;
+            resourceType: string;
+            description: string | null;
+            configFields: Array<{
+              __typename: 'ConfigTypeField';
+              name: string;
+              description: string | null;
+              configTypeKey: string;
+              isRequired: boolean;
+              defaultValueAsJson: string | null;
+            }>;
+            configuredValues: Array<{
+              __typename: 'ConfiguredValue';
+              key: string;
+              value: string;
+              type: Types.ConfiguredValueType;
+            }>;
+            nestedResources: Array<{
+              __typename: 'NestedResourceEntry';
+              name: string;
+              resource: {__typename: 'ResourceDetails'; name: string; resourceType: string};
+            }>;
+          };
+        }>;
+        parentResources: Array<{
+          __typename: 'NestedResourceEntry';
+          name: string;
+          resource: {
+            __typename: 'ResourceDetails';
+            name: string;
+            resourceType: string;
+            description: string | null;
+          };
         }>;
       }
     | {__typename: 'ResourceNotFoundError'};

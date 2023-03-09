@@ -2820,6 +2820,7 @@ export type ResourceDetails = {
   isTopLevel: Scalars['Boolean'];
   name: Scalars['String'];
   nestedResources: Array<NestedResourceEntry>;
+  parentResources: Array<NestedResourceEntry>;
   resourceType: Scalars['String'];
 };
 
