@@ -163,11 +163,11 @@ def test_aggregate_constraint():
 
 def test_multi_agg_constraint():
     def column_val_1(data):
-        """checks column mean equal to 1."""
+        """Checks column mean equal to 1."""
         return (data.mean() == 1, {})
 
     def column_val_2(data):
-        """checks column mean equal to 1.5."""
+        """Checks column mean equal to 1.5."""
         return (data.mean() == 1.5, {})
 
     df = DataFrame(

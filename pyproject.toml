@@ -251,6 +251,12 @@ select = [
 # Fail if Ruff is not running this version.
 required-version = "0.0.254"
 
+[tool.ruff.pydocstyle]
+
+# Enforce google-style docstrings. See:
+# https://google.github.io/styleguide/pyguide.html#383-functions-and-methods
+convention = "google"
+
 [tool.ruff.isort]
 
 # Combine multiple `from foo import bar as baz` statements with the same source
