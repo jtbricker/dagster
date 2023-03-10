@@ -80,7 +80,8 @@ def sensor(
             asset_selection=asset_selection,
         )
 
-        update_wrapper(sensor_def, wrapped=fn)
+        # `update_wrapper` typing cannot currently handle a Union of Callables correctly
+        update_wrapper(sensor_def, wrapped=fn)  # type: ignore
 
         return sensor_def
 

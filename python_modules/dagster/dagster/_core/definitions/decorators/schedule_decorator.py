@@ -193,7 +193,8 @@ def schedule(
             default_status=default_status,
         )
 
-        update_wrapper(schedule_def, wrapped=fn)
+        # `update_wrapper` typing cannot currently handle a Union of Callables correctly
+        update_wrapper(schedule_def, wrapped=fn)  # type: ignore
 
         return schedule_def
 
