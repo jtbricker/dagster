@@ -91,7 +91,7 @@ def sample_runs_details(include_related=None, **kwargs):
                 "supports_docs": False,
                 "state": 10,
             }
-            run = deep_merge_dicts(run, kwargs)
+            deep_merge_dicts(run, kwargs)
     return {
         "status": {
             "code": 200,
