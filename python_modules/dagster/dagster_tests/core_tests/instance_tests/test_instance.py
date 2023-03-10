@@ -386,7 +386,7 @@ def test_invalid_configurable_class():
         with instance_for_test(
             overrides={"run_launcher": {"module": "dagster", "class": "MadeUpRunLauncher"}}
         ) as instance:
-            print(instance.run_launcher)  # pylint: disable=print-call
+            print(instance.run_launcher)  # noqa: T201
 
 
 def test_invalid_configurable_module():
@@ -407,7 +407,7 @@ def test_invalid_configurable_module():
                 }
             }
         ) as instance:
-            print(instance.run_launcher)  # pylint: disable=print-call
+            print(instance.run_launcher)  # noqa: T201
 
 
 @pytest.mark.parametrize("dirname", (".", ".."))
@@ -538,4 +538,4 @@ def test_configurable_class_missing_methods():
                 }
             }
         ) as instance:
-            print(instance.run_launcher)  # pylint: disable=print-call
+            print(instance.run_launcher)  # noqa: T201
