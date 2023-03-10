@@ -48,8 +48,7 @@ def create_repository_using_definitions_args(
     executor: Optional[Union[ExecutorDefinition, Executor]] = None,
     loggers: Optional[Mapping[str, LoggerDefinition]] = None,
 ) -> Union[RepositoryDefinition, PendingRepositoryDefinition]:
-    """
-    Create a named repository using the same arguments as :py:class:`Definitions`. In older
+    """Create a named repository using the same arguments as :py:class:`Definitions`. In older
     versions of Dagster, repositories were the mechanism for organizing assets, schedules, sensors,
     and jobs. There could be many repositories per code location. This was a complicated ontology but
     gave users a way to organize code locations that contained large numbers of heterogenous definitions.
@@ -151,8 +150,7 @@ def _create_repository_using_definitions_args(
 
 
 class Definitions:
-    """
-    A set of definitions explicitly available and loadable by Dagster tools.
+    """A set of definitions explicitly available and loadable by Dagster tools.
 
     Parameters:
         assets (Optional[Iterable[Union[AssetsDefinition, SourceAsset, CacheableAssetsDefinition]]]):
@@ -291,8 +289,7 @@ class Definitions:
         instance: Optional[DagsterInstance] = None,
         partition_key: Optional[str] = None,
     ) -> object:
-        """
-        Load the contents of an asset as a Python object.
+        """Load the contents of an asset as a Python object.
 
         Invokes `load_input` on the :py:class:`IOManager` associated with the asset.
 
@@ -320,8 +317,7 @@ class Definitions:
     def get_asset_value_loader(
         self, instance: Optional[DagsterInstance] = None
     ) -> "AssetValueLoader":
-        """
-        Returns an object that can load the contents of assets as Python objects.
+        """Returns an object that can load the contents of assets as Python objects.
 
         Invokes `load_input` on the :py:class:`IOManager` associated with the assets. Avoids
         spinning up resources separately for each asset.
@@ -360,8 +356,7 @@ class Definitions:
 
     @cached_method
     def get_repository_def(self) -> RepositoryDefinition:
-        """
-        Definitions is implemented by wrapping RepositoryDefinition. Get that underlying object
+        """Definitions is implemented by wrapping RepositoryDefinition. Get that underlying object
         in order to access an functionality which is not exposed on Definitions. This method
         also resolves a PendingRepositoryDefinition to a RepositoryDefinition.
         """

@@ -111,15 +111,11 @@ class AssetKey(NamedTuple("_AssetKey", [("path", PublicAttr[Sequence[str]])])):
         return True
 
     def to_string(self) -> str:
-        """
-        E.g. '["first_component", "second_component"]'.
-        """
+        """E.g. '["first_component", "second_component"]'."""
         return seven.json.dumps(self.path)
 
     def to_user_string(self) -> str:
-        """
-        E.g. "first_component/second_component".
-        """
+        """E.g. "first_component/second_component"."""
         return ASSET_KEY_DELIMITER.join(self.path)
 
     def to_python_identifier(self, suffix: Optional[str] = None) -> str:
@@ -180,8 +176,7 @@ class AssetKey(NamedTuple("_AssetKey", [("path", PublicAttr[Sequence[str]])])):
 
 
 class AssetKeyPartitionKey(NamedTuple):
-    """
-    An AssetKey with an (optional) partition key. Refers either to a non-partitioned asset or a
+    """An AssetKey with an (optional) partition key. Refers either to a non-partitioned asset or a
     partition of a partitioned asset.
     """
 
@@ -284,8 +279,7 @@ class Output(Generic[T]):
 
 
 class DynamicOutput(Generic[T]):
-    """
-    Variant of :py:class:`Output <dagster.Output>` used to support
+    """Variant of :py:class:`Output <dagster.Output>` used to support
     dynamic mapping & collect. Each ``DynamicOutput`` produced by an op represents
     one item in a set that can be processed individually with ``map`` or gathered
     with ``collect``.
@@ -807,8 +801,7 @@ class Failure(Exception):
 
 
 class RetryRequested(Exception):
-    """
-    An exception to raise from an op to indicate that it should be retried.
+    """An exception to raise from an op to indicate that it should be retried.
 
     Args:
         max_retries (Optional[int]):

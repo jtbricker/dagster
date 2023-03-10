@@ -260,9 +260,8 @@ def test_infer_input_description_from_docstring_failure():
     # description
     @op
     def my_solid(_arg1):
-        """
-        Args:
-            _arg1 - description of arg.
+        """Args:
+        _arg1 - description of arg.
         """
 
     assert my_solid
@@ -271,8 +270,7 @@ def test_infer_input_description_from_docstring_failure():
 def test_infer_input_description_from_docstring_rest():
     @op
     def rest(_context, hello: str, optional: int = 5):
-        """
-        :param str hello: hello world param
+        """:param str hello: hello world param
         :param int optional: optional param, defaults to 5.
         """
         return hello + str(optional)
@@ -293,8 +291,7 @@ def test_infer_input_description_from_docstring_rest():
 def test_infer_descriptions_from_docstring_numpy():
     @op
     def good_numpy(_context, hello: str, optional: int = 5):
-        """
-        Test.
+        """Test.
 
         Parameters
         ----------
@@ -323,8 +320,7 @@ def test_infer_descriptions_from_docstring_numpy():
 def test_infer_descriptions_from_docstring_google():
     @op
     def good_google(_context, hello: str, optional: int = 5):
-        """
-        Test.
+        """Test.
 
         Args:
             hello       (str): hello world param
@@ -352,9 +348,8 @@ def test_infer_output_description_from_docstring_failure():
     # description
     @op
     def google() -> int:
-        """
-        Returns:
-            int - a number.
+        """Returns:
+        int - a number.
         """
         return 1
 
@@ -364,9 +359,7 @@ def test_infer_output_description_from_docstring_failure():
 def test_infer_output_description_from_docstring_numpy():
     @op
     def numpy(_context) -> int:
-        """
-
-        Returns
+        """Returns
         -------
         int
             a number.
@@ -381,9 +374,7 @@ def test_infer_output_description_from_docstring_numpy():
 def test_infer_output_description_from_docstring_rest():
     @op
     def rest(_context) -> int:
-        """
-        :return int: a number.
-        """
+        """:return int: a number."""
         return 1
 
     props = infer_output_props(rest.compute_fn.decorated_fn)
@@ -394,9 +385,8 @@ def test_infer_output_description_from_docstring_rest():
 def test_infer_output_description_from_docstring_google():
     @op
     def google(_context) -> int:
-        """
-        Returns:
-            int: a number.
+        """Returns:
+        int: a number.
         """
         return 1
 

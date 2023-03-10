@@ -98,8 +98,7 @@ def _pipeline_snapshot_from_storage(
     metadata: Optional[Sequence[MetadataEntry]] = None,
     **kwargs,  # pylint: disable=unused-argument
 ) -> "PipelineSnapshot":
-    """
-    v0
+    """v0
     v1:
         - lineage added
     v2:

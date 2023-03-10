@@ -69,8 +69,7 @@ class TimeWindowPartitionsDefinition(
         ],
     ),
 ):
-    r"""
-    A set of partitions where each partitions corresponds to a time window.
+    r"""A set of partitions where each partitions corresponds to a time window.
 
     The provided cron_schedule determines the bounds of the time windows. E.g. a cron_schedule of
     "0 0 \\* \\* \\*" will result in daily partitions that start at midnight and end at midnight of the
@@ -607,9 +606,7 @@ class TimeWindowPartitionsDefinition(
         )
 
     def _iterate_time_windows(self, start: datetime) -> Iterable[TimeWindow]:
-        """
-        Returns an infinite generator of time windows that start after the given start time.
-        """
+        """Returns an infinite generator of time windows that start after the given start time."""
         start_timestamp = pendulum.instance(start, tz=self.timezone).timestamp()
         iterator = cron_string_iterator(
             start_timestamp=start_timestamp,
@@ -626,9 +623,7 @@ class TimeWindowPartitionsDefinition(
             prev_time = next_time
 
     def _reverse_iterate_time_windows(self, end: datetime) -> Iterable[TimeWindow]:
-        """
-        Returns an infinite generator of time windows that end before the given end time.
-        """
+        """Returns an infinite generator of time windows that end before the given end time."""
         end_timestamp = pendulum.instance(end, tz=self.timezone).timestamp()
         iterator = reverse_cron_string_iterator(
             end_timestamp=end_timestamp,
@@ -646,10 +641,9 @@ class TimeWindowPartitionsDefinition(
             prev_time = next_time
 
     def get_partition_key_for_timestamp(self, timestamp: float, end_closed: bool = False) -> str:
-        """
-        Args:
-            timestamp (float): Timestamp from the unix epoch, UTC.
-            end_closed (bool): Whether the interval is closed at the end or at the beginning.
+        """Args:
+        timestamp (float): Timestamp from the unix epoch, UTC.
+        end_closed (bool): Whether the interval is closed at the end or at the beginning.
         """
         iterator = cron_string_iterator(
             timestamp, self.cron_schedule, self.timezone, start_offset=-1
@@ -1264,8 +1258,7 @@ class TimeWindowPartitionsSubset(PartitionsSubset):
         self,
         current_time: Optional[datetime] = None,
     ) -> Sequence[TimeWindow]:
-        """
-        Returns a list of partition time windows that are not in the subset.
+        """Returns a list of partition time windows that are not in the subset.
         Each time window is a single partition.
         """
         first_tw = self._partitions_def.get_first_partition_window(current_time=current_time)
@@ -1554,8 +1547,7 @@ class PartitionTimeWindowStatus:
 def fetch_flattened_time_window_ranges(
     materialized_subset: TimeWindowPartitionsSubset, failed_subset: TimeWindowPartitionsSubset
 ) -> Sequence[PartitionTimeWindowStatus]:
-    """
-    Given a materialized subset and a failed subset, flatten to a list of timewindows where the
+    """Given a materialized subset and a failed subset, flatten to a list of timewindows where the
     failed subsets are as they were, and the materialized subset is filtered to not overlap with
     failed.
     """

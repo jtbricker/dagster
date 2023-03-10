@@ -31,8 +31,7 @@ def test_merge_type():
 def test_merge_desc():
     @op(ins={"arg_b": In(metadata={"explicit": True})})
     def merged(_context, arg_a, arg_b, arg_c):
-        """
-        Testing.
+        """Testing.
 
         Args:
             arg_b: described
@@ -71,8 +70,7 @@ def test_precedence():
         }
     )
     def precedence(_context, arg_a: int, arg_b: int, arg_c: int):
-        """
-        Testing.
+        """Testing.
 
         Args:
             arg_b: boo
@@ -123,9 +121,8 @@ def test_iter_out():
 def test_dynamic():
     @op(out=DynamicOut(dagster_type=int))
     def dyn_desc(_) -> Iterator[DynamicOutput]:
-        """
-        Returns:
-            numbers.
+        """Returns:
+        numbers.
         """
         yield DynamicOutput(4, "4")
 

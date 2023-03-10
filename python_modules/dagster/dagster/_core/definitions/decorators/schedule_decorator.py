@@ -72,8 +72,7 @@ def schedule(
     job: Optional[ExecutableDefinition] = None,
     default_status: DefaultScheduleStatus = DefaultScheduleStatus.STOPPED,
 ) -> Callable[[RawScheduleEvaluationFunction], ScheduleDefinition]:
-    """
-    Creates a schedule following the provided cron schedule and requests runs for the provided job.
+    """Creates a schedule following the provided cron schedule and requests runs for the provided job.
 
     The decorated function takes in a :py:class:`~dagster.ScheduleEvaluationContext` as its only
     argument, and does one of the following:

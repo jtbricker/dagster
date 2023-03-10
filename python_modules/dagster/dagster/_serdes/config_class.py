@@ -132,8 +132,7 @@ class ConfigurableClass(ABC):
     @property
     @abstractmethod
     def inst_data(self) -> Any:
-        """
-        Subclass must be able to return the inst_data as a property if it has been constructed
+        """Subclass must be able to return the inst_data as a property if it has been constructed
         through the from_config_value code path.
         """
 

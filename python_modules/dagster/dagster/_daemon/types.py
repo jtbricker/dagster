@@ -92,8 +92,7 @@ class DaemonStatus(
         ],
     )
 ):
-    """
-    Daemon statuses are derived from daemon heartbeats and instance configuration to provide an
+    """Daemon statuses are derived from daemon heartbeats and instance configuration to provide an
     overview about the daemon's liveness.
     """
 

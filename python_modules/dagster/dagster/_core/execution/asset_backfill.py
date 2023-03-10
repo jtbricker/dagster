@@ -68,8 +68,7 @@ class AssetBackfillData(NamedTuple):
         )
 
     def get_num_partitions(self) -> Optional[int]:
-        """
-        Only valid when the same number of partitions are targeted in every asset.
+        """Only valid when the same number of partitions are targeted in every asset.
 
         When not valid, returns None.
         """
@@ -84,8 +83,7 @@ class AssetBackfillData(NamedTuple):
             return None
 
     def get_partition_names(self) -> Optional[Sequence[str]]:
-        """
-        Only valid when the same number of partitions are targeted in every asset.
+        """Only valid when the same number of partitions are targeted in every asset.
 
         When not valid, returns None.
         """
@@ -202,8 +200,7 @@ class AssetBackfillData(NamedTuple):
 def execute_asset_backfill_iteration(
     backfill: "PartitionBackfill", workspace: BaseWorkspaceRequestContext, instance: DagsterInstance
 ) -> Iterable[None]:
-    """
-    Runs an iteration of the backfill, including submitting runs and updating the backfill object
+    """Runs an iteration of the backfill, including submitting runs and updating the backfill object
     in the DB.
 
     This is a generator so that we can return control to the daemon and let it heartbeat during
@@ -253,9 +250,7 @@ def submit_run_request(
     instance: DagsterInstance,
     workspace: BaseWorkspaceRequestContext,
 ) -> None:
-    """
-    Creates and submits a run for the given run request.
-    """
+    """Creates and submits a run for the given run request."""
     repo_handle = asset_graph.get_repository_handle(
         cast(Sequence[AssetKey], run_request.asset_selection)[0]
     )
@@ -336,8 +331,7 @@ def execute_asset_backfill_iteration_inner(
     asset_graph: ExternalAssetGraph,
     instance: DagsterInstance,
 ) -> Iterable[Optional[AssetBackfillIterationResult]]:
-    """
-    Core logic of a backfill iteration. Has no side effects.
+    """Core logic of a backfill iteration. Has no side effects.
 
     Computes which runs should be requested, if any, as well as updated bookkeeping about the status
     of asset partitions targeted by the backfill.
@@ -455,10 +449,9 @@ def should_backfill_atomic_asset_partitions_unit(
     failed_and_downstream_subset: AssetGraphSubset,
     dynamic_partitions_store: DynamicPartitionsStore,
 ) -> bool:
-    """
-    Args:
-        candidates_unit: A set of asset partitions that must all be materialized if any is
-            materialized.
+    """Args:
+    candidates_unit: A set of asset partitions that must all be materialized if any is
+        materialized.
     """
     for candidate in candidates_unit:
         if (
@@ -490,8 +483,7 @@ def should_backfill_atomic_asset_partitions_unit(
 def _get_failed_asset_partitions(
     instance_queryer: CachingInstanceQueryer, backfill_id: str
 ) -> Sequence[AssetKeyPartitionKey]:
-    """
-    Returns asset partitions that materializations were requested for as part of the backfill, but
+    """Returns asset partitions that materializations were requested for as part of the backfill, but
     will not be materialized.
 
     Includes canceled asset partitions. Implementation assumes that successful runs won't have any

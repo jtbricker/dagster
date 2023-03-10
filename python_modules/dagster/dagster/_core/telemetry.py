@@ -79,8 +79,7 @@ KNOWN_CI_ENV_VAR_KEYS = {
 
 
 def telemetry_wrapper(metadata):
-    """
-    Wrapper around functions that are logged. Will log the function_name, client_time, and
+    """Wrapper around functions that are logged. Will log the function_name, client_time, and
     elapsed_time, and success.
 
     Wrapped function must be in the list of whitelisted function, and must have a DagsterInstance
@@ -177,8 +176,7 @@ class TelemetryEntry(
         ],
     )
 ):
-    """
-    Schema for telemetry logs.
+    """Schema for telemetry logs.
 
     Currently, log entries are coerced to the same schema to enable storing all entries in one DB
     table with unified schema.
@@ -245,8 +243,7 @@ def _dagster_home_if_set():
 
 
 def get_or_create_dir_from_dagster_home(target_dir):
-    """
-    If $DAGSTER_HOME is set, return $DAGSTER_HOME/<target_dir>/
+    """If $DAGSTER_HOME is set, return $DAGSTER_HOME/<target_dir>/
     Otherwise, return ~/.dagster/<target_dir>/.
 
     The 'logs' directory is used to cache logs before upload
@@ -272,8 +269,7 @@ def get_or_create_dir_from_dagster_home(target_dir):
 
 
 def get_log_queue_dir():
-    """
-    Get the directory where we store log queue files, creating the directory if needed.
+    """Get the directory where we store log queue files, creating the directory if needed.
 
     The log queue directory is used to temporarily store logs during upload. This is to prevent
     dropping events or double-sending events that occur during the upload process.

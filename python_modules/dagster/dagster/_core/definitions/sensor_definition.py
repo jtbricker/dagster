@@ -655,8 +655,7 @@ def build_sensor_context(
 def _run_requests_with_base_asset_jobs(
     run_requests, context, outer_asset_selection
 ) -> Sequence[RunRequest]:
-    """
-    For sensors that target asset selections instead of jobs, finds the corresponding base asset
+    """For sensors that target asset selections instead of jobs, finds the corresponding base asset
     for a selected set of assets.
     """
     asset_graph = context.repository_def.asset_graph

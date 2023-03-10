@@ -1,5 +1,4 @@
-"""
-Serialization & deserialization for Dagster objects.
+"""Serialization & deserialization for Dagster objects.
 
 Why have custom serialization?
 
@@ -184,8 +183,7 @@ def whitelist_for_serdes(
     serializer: Optional[Type["Serializer"]] = None,
     storage_name: Optional[str] = None,
 ) -> Union[T_Type, Callable[[T_Type], T_Type]]:
-    """
-    Decorator to whitelist a NamedTuple or enum to be serializable. If a `storage_name` is provided
+    """Decorator to whitelist a NamedTuple or enum to be serializable. If a `storage_name` is provided
     for a NamedTuple, then serialized instances of the NamedTuple will be stored under the
     `storage_name` instead of the class name. This is primarily useful for maintaining backwards
     compatibility. If a serialized object undergoes a name change, then setting `storage_name` to
@@ -281,8 +279,7 @@ class NamedTupleSerializer(Serializer, Generic[T_NamedTuple]):
         whitelist_map: WhitelistMap,
         descent_path: str,
     ) -> T_NamedTuple:
-        """
-        Load the target value from the object tree output of json parsing.
+        """Load the target value from the object tree output of json parsing.
 
         Args:
             storage_dict: The parsed json object to hydrate
@@ -301,8 +298,7 @@ class NamedTupleSerializer(Serializer, Generic[T_NamedTuple]):
         whitelist_map: WhitelistMap,
         descent_path: str,
     ) -> Dict[str, JsonSerializableValue]:
-        """
-        Transform the object in to a form that can be json serialized.
+        """Transform the object in to a form that can be json serialized.
 
         Args:
             value: the instance of the object
@@ -429,8 +425,7 @@ def pack_value(
     whitelist_map: WhitelistMap = _WHITELIST_MAP,
     descent_path: Optional[str] = None,
 ) -> JsonSerializableValue:
-    """
-    Convert an object into a json serializable complex of dicts, lists, and scalars.
+    """Convert an object into a json serializable complex of dicts, lists, and scalars.
 
     The following types are transformed in to dicts with special marker keys:
         * whitelisted named tuples
@@ -706,8 +701,7 @@ def register_serdes_tuple_fallbacks(
     fallback_map: Mapping[str, Optional[Type[NamedTuple]]],
     whitelist_map: WhitelistMap = _WHITELIST_MAP,
 ) -> None:
-    """
-    Manually provide remappings for named tuples.
+    """Manually provide remappings for named tuples.
     Used to manage loading previously types that no longer exist.
     """
     for class_name, klass in fallback_map.items():
@@ -728,8 +722,7 @@ def register_serdes_enum_fallbacks(
     fallback_map: Mapping[str, Type[Enum]],
     whitelist_map: WhitelistMap = _WHITELIST_MAP,
 ) -> None:
-    """
-    Manually provide remappings for named tuples.
+    """Manually provide remappings for named tuples.
     Used to manage loading previously types that no longer exist.
     """
     serializer: Type[EnumSerializer] = DefaultEnumSerializer

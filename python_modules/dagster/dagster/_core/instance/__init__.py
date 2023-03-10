@@ -1710,8 +1710,7 @@ class DagsterInstance(DynamicPartitionsStore):
         filter_tags: Optional[Mapping[str, str]] = None,
         filter_event_id: Optional[int] = None,
     ) -> Sequence[Mapping[str, str]]:
-        """
-        Fetches asset event tags for the given asset key.
+        """Fetches asset event tags for the given asset key.
 
         If filter_tags is provided, searches for events containing all of the filter tags. Then,
         returns all tags for those events. This enables searching for multipartitioned asset
@@ -1754,8 +1753,7 @@ class DagsterInstance(DynamicPartitionsStore):
     def add_dynamic_partitions(
         self, partitions_def_name: str, partition_keys: Sequence[str]
     ) -> None:
-        """
-        Add partitions to the specified dynamic partitions definition idempotently.
+        """Add partitions to the specified dynamic partitions definition idempotently.
         Does not add any partitions that already exist.
         """
         from dagster._core.definitions.partition import (
@@ -1773,8 +1771,7 @@ class DagsterInstance(DynamicPartitionsStore):
     @public
     @traced
     def delete_dynamic_partition(self, partitions_def_name: str, partition_key: str) -> None:
-        """
-        Delete a partition for the specified dynamic partitions definition.
+        """Delete a partition for the specified dynamic partitions definition.
         If the partition does not exist, exits silently.
         """
         check.str_param(partitions_def_name, "partitions_def_name")
@@ -1784,9 +1781,7 @@ class DagsterInstance(DynamicPartitionsStore):
     @public
     @traced
     def has_dynamic_partition(self, partitions_def_name: str, partition_key: str) -> bool:
-        """
-        Checks if a partition key exists for the dynamic partitions definition.
-        """
+        """Checks if a partition key exists for the dynamic partitions definition."""
         check.str_param(partitions_def_name, "partitions_def_name")
         check.str_param(partition_key, "partition_key")
         return self._event_storage.has_dynamic_partition(partitions_def_name, partition_key)
@@ -1857,9 +1852,7 @@ class DagsterInstance(DynamicPartitionsStore):
         pipeline_name=None,
         run_id=None,
     ):
-        """
-        Report a EngineEvent that occurred outside of a pipeline execution context.
-        """
+        """Report a EngineEvent that occurred outside of a pipeline execution context."""
         from dagster._core.events import DagsterEvent, DagsterEventType, EngineEventData
 
         check.opt_class_param(cls, "cls")
@@ -1906,8 +1899,7 @@ class DagsterInstance(DynamicPartitionsStore):
         run_id: str,
         log_level: Union[str, int] = logging.INFO,
     ):
-        """
-        Takes a DagsterEvent and stores it in persistent storage for the corresponding PipelineRun.
+        """Takes a DagsterEvent and stores it in persistent storage for the corresponding PipelineRun.
         """
         from dagster._core.events.log import EventLogEntry
 
@@ -2384,8 +2376,7 @@ class DagsterInstance(DynamicPartitionsStore):
     def get_daemon_statuses(
         self, daemon_types: Optional[Sequence[str]] = None
     ) -> Mapping[str, "DaemonStatus"]:
-        """
-        Get the current status of the daemons. If daemon_types aren't provided, defaults to all
+        """Get the current status of the daemons. If daemon_types aren't provided, defaults to all
         required types. Returns a dict of daemon type to status.
         """
         from dagster._daemon.controller import get_daemon_statuses
@@ -2417,8 +2408,7 @@ class DagsterInstance(DynamicPartitionsStore):
 
     @property
     def should_start_background_run_thread(self) -> bool:
-        """
-        Gate on an experimental feature to start a thread that monitors for if the run should be canceled.
+        """Gate on an experimental feature to start a thread that monitors for if the run should be canceled.
         """
         return False
 
