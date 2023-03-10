@@ -177,15 +177,15 @@ def test_multi_agg_constraint():
         }
     )
     aggregate_val = MultiAggregateConstraintWithMetadata(
-        "Confirms column means equal to 1",
+        "Confirms column means equal to 1.",
         dict([("bar", [column_val_1, column_val_2]), ("foo", [column_val_1, column_val_2])]),
         ConstraintWithMetadataException,
         raise_or_typecheck=False,
     )
     val = aggregate_val.validate(df).metadata_entries[0].value.data
     assert val["expected"] == {
-        "bar": {"column_val_2": "checks column mean equal to 1.5."},
-        "foo": {"column_val_1": "checks column mean equal to 1."},
+        "bar": {"column_val_2": "Checks column mean equal to 1.5."},
+        "foo": {"column_val_1": "Checks column mean equal to 1."},
     }
     assert val["offending"] == {
         "bar": {"column_val_2": "a violation"},

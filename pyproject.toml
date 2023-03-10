@@ -126,21 +126,6 @@ extend-exclude = [
 
 ignore = [
 
-  # (non-google docstring)  These docstring rules are collectively incompatible
-  # with the Google-style docstrings we use. List taken from:
-  # https://github.com/charliermarsh/ruff#does-ruff-support-numpy--or-google-style-docstrings
-  "D203",
-  "D204",
-  "D213",
-  "D215",
-  "D400",
-  "D404",
-  "D406",
-  "D407",
-  "D408",
-  "D409",
-  "D413",
-
   # (missing public docstrings) These work off of the Python sense of "public", rather than our
   # bespoke definition based off of `@public`. When ruff supports custom plugins then we can write
   # appropriate rules to require docstrings for `@public`.
@@ -251,9 +236,15 @@ select = [
 # Fail if Ruff is not running this version.
 required-version = "0.0.254"
 
+[tool.ruff.per-file-ignores]
+
+# Don't format docstrings in alembic migrations.
+"**/alembic/versions/*.py" = ["D"]
+
 [tool.ruff.pydocstyle]
 
-# Enforce google-style docstrings. See:
+# Enforce google-style docstrings. This is equivalent to ignoring a large number of pydocstyle (D)
+# rules incompatible with google-style docstrings. See:
 # https://google.github.io/styleguide/pyguide.html#383-functions-and-methods
 convention = "google"
 
