@@ -106,10 +106,6 @@ def test_ins_dagster_types():
 def test_out():
     @op(out=Out(metadata={"x": 1}))
     def my_op() -> int:
-        """
-        Returns:
-            int: some int
-        """
         return 1
 
     assert my_op.outs == {
@@ -142,10 +138,6 @@ def test_multi_out():
         }
     )
     def my_op() -> Tuple[int, str]:
-        """
-        Returns:
-            Tuple[int, str]: A tuple of values
-        """
         return 1, "q"
 
     assert len(my_op.output_defs) == 2

@@ -86,7 +86,7 @@ def test_schedule_decorators_sanity():
 
     @schedule(cron_schedule="* * * * *", job_name="foo_job")
     def foo_schedule():
-        """Fake doc block"""
+        """Fake doc block."""
         return {}
 
     # Ensure that schedule definition inherits properties from wrapped fxn

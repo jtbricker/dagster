@@ -11,7 +11,7 @@ def test_new_config_descriptions_and_defaults():
 
     class AnOpConfig(Config):
         """
-        Config for my new op
+        Config for my new op.
         """
 
         a_string: str = Field(description="A string")

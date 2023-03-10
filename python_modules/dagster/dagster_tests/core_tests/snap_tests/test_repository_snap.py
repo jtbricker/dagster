@@ -73,7 +73,7 @@ def test_repository_snap_definitions_resources_basic():
 
 def test_repository_snap_definitions_resources_complex():
     class MyStringResource(ConfigurableResource):
-        """my description"""
+        """my description."""
 
         my_string: str = "bar"
 

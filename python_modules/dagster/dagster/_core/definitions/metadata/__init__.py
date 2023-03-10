@@ -218,8 +218,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def text(text: str) -> "TextMetadataValue":
         """Static constructor for a metadata value wrapping text as
         :py:class:`TextMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -241,8 +242,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def url(url: str) -> "UrlMetadataValue":
         """Static constructor for a metadata value wrapping a URL as
         :py:class:`UrlMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -264,8 +266,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     @staticmethod
     def path(path: Union[str, os.PathLike]) -> "PathMetadataValue":
         """Static constructor for a metadata value wrapping a path as
-        :py:class:`PathMetadataValue`. For example:
+        :py:class:`PathMetadataValue`.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -286,8 +289,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     @staticmethod
     def notebook(path: Union[str, os.PathLike]) -> "NotebookMetadataValue":
         """Static constructor for a metadata value wrapping a notebook path as
-        :py:class:`NotebookMetadataValue`. For example:
+        :py:class:`NotebookMetadataValue`.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -309,8 +313,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def json(data: Union[Sequence[Any], Mapping[str, Any]]) -> "JsonMetadataValue":
         """Static constructor for a metadata value wrapping a json-serializable list or dict
         as :py:class:`JsonMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -333,9 +338,10 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def md(data: str) -> "MarkdownMetadataValue":
         """Static constructor for a metadata value wrapping markdown data as
         :py:class:`MarkdownMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
 
+        Example:
         .. code-block:: python
 
             @op
@@ -357,8 +363,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def python_artifact(python_artifact: Callable) -> "PythonArtifactMetadataValue":
         """Static constructor for a metadata value wrapping a python artifact as
         :py:class:`PythonArtifactMetadataValue`. Can be used as the value type for the
-        `metadata` parameter for supported events. For example:
+        `metadata` parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -382,8 +389,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def float(value: float) -> "FloatMetadataValue":
         """Static constructor for a metadata value wrapping a float as
         :py:class:`FloatMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -405,8 +413,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def int(value: int) -> "IntMetadataValue":
         """Static constructor for a metadata value wrapping an int as
         :py:class:`IntMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -428,8 +437,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     def bool(value: bool) -> "BoolMetadataValue":
         """Static constructor for a metadata value wrapping a bool as
         :py:class:`BoolMetadataValuye`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -490,8 +500,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     ) -> "TableMetadataValue":
         """Static constructor for a metadata value wrapping arbitrary tabular data as
         :py:class:`TableMetadataValue`. Can be used as the value type for the `metadata`
-        parameter for supported events. For example:
+        parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             @op
@@ -524,8 +535,9 @@ class MetadataValue(ABC, Generic[T_Packable]):
     ) -> "TableSchemaMetadataValue":
         """Static constructor for a metadata value wrapping a table schema as
         :py:class:`TableSchemaMetadataValue`. Can be used as the value type
-        for the `metadata` parameter for supported events. For example:
+        for the `metadata` parameter for supported events.
 
+        Example:
         .. code-block:: python
 
             schema = TableSchema(
